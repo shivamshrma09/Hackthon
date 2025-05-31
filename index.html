@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HackSeek | Find hackathons</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: linear-gradient(135deg, #e0eaff 0%, #f7faff 100%);
+      color: #232b38;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .navbar {
+      background: #fff;
+      color: #3151a3;
+      display: flex;
+      align-items: center;
+      padding: 0 38px;
+      height: 66px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 8px 36px #4f8cff26;
+      border-bottom: 1.5px solid #e3eafc;
+      gap: 0;
+    }
+    .nav-logo-img {
+      height: 68px;
+      margin: 6px 0;
+      display: block;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 7px #4f8cff11;
+    }
+    .btn {
+      background: #fff;
+      color: #1dbf73;
+      border: 2px solid #1dbf73;
+      border-radius: 8px;
+      padding: 10px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-right: 18px;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+    }
+    .btn:hover {
+      background: #1dbf73;
+      color: #fff;
+      border: 2px solid #1dbf73;
+    }
+    .profile-navbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      border-radius: 18px;
+      padding: 3px 10px 3px 3px;
+      margin-left: 8px;
+      background: #f7faff;
+    }
+    .profile-img-navbar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #4f8cff;
+      background: #e3eafc;
+      box-shadow: 0 2px 8px #4f8cff22;
+    }
+    .profile-name-navbar {
+      font-weight: 700;
+      color: #3151a3;
+      font-size: 1.07em;
+      max-width: 120px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .hero {
+      margin: 40px 0 30px 0;
+      text-align: center;
+    }
+    .hero-logo {
+      display: block;
+      margin: 0 auto 12px auto;
+      max-width: 340px;
+      width: 100%;
+      height: auto;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #3151a3;
+      margin: 0 0 12px 0;
+      letter-spacing: 1px;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: #333;
+      margin: 0;
+      font-weight: 500;
+    }
+    .filters {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin: 0 auto 30px auto;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 1100px;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 2px 16px #4f8cff11;
+      border-radius: 30px;
+      padding: 18px 16px;
+    }
+    .filters select,
+    .filters input {
+      padding: 12px 18px;
+      border-radius: 28px;
+      border: 1.5px solid #d2e6f7;
+      font-size: 1.06rem;
+      background: #f7faff;
+      color: #232b38;
+      outline: none;
+      min-width: 150px;
+      box-shadow: 0 1px 8px #4f8cff11;
+      transition: border 0.18s;
+    }
+    .filters .btn {
+      padding: 12px 24px;
+      font-size: 1.06rem;
+      border-radius: 28px;
+      font-weight: 700;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 18px;
+    }
+    .internship-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 22px;
+      margin: 0 0 60px 0;
+    }
+    @media (max-width: 700px) {
+      .internship-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 7px 2px;
+        gap: 6px;
+      }
+      .filters select,
+      .filters input,
+      .filters .btn {
+        font-size: 0.85rem;
+        padding: 5px 7px;
+        min-width: 80px;
+        max-width: 100px;
+      }
+      .nav-logo-img { height: 48px; }
+      .hero-logo { max-width: 200px; }
+      .profile-modal { min-width: 0; padding: 18px 7px;}
+      .edit-modal { padding: 10px 2px;}
+    }
+    .card {
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 8px 36px #4f8cff26;
+      padding: 24px 22px 20px 22px;
+      display: flex;
+      flex-direction: column;
+      min-height: 230px;
+      position: relative;
+      overflow: hidden;
+      border-left: 8px solid #4f8cff;
+      border-top: 1.5px solid #e3eafc;
+      margin: 0 2px;
+    }
+    .card .card-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+    .card .org-img {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      object-fit: contain;
+      background: #f3f3f3;
+      border: 2px solid #e3eafc;
+      box-shadow: 0 1px 4px #4f8cff15;
+    }
+    .card h3 {
+      margin: 0 0 0 0;
+      color: #3151a3;
+      font-size: 1.17em;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .card .company {
+      font-size: 1.01rem;
+      color: #6c7a89;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .card .desc {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 1.01rem;
+      flex: 1;
+    }
+    .badges {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 7px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 11px;
+      border-radius: 12px;
+      font-size: 0.93em;
+      font-weight: 600;
+      color: #333;
+      background: #e3eafc;
+    }
+    .badge-deadline {
+      background: #ffebee;
+      color: #c62828;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 7px;
+      flex-wrap: wrap;
+    }
+    .bookmark-btn {
+      background: #fffbe6;
+      color: #4f8cff;
+      border: 1.5px solid #ffe082;
+      border-radius: 8px;
+      padding: 6px 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.15s, color 0.15s;
+    }
+    .bookmark-btn.bookmarked {
+      background: #ffe082;
+      color: #232b38;
+      border: 1.5px solid #4f8cff;
+    }
+    .actions a {
+      background: #fff;
+      color: #3151a3;
+      border: 1.5px solid #e3eafc;
+      border-radius: 8px;
+      padding: 6px 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+    }
+    .actions a.linkedin {
+      background: #e3eafc;
+      color: #0077b5;
+      border: 1.5px solid #e3eafc;
+      font-weight: 700;
+      font-size: 1.1em;
+    }
+    .actions a.linkedin:hover {
+      background: #0077b5;
+      color: #fff;
+    }
+    /* Profile Modal */
+    .modal-bg {
+      position: fixed; top:0; left:0; right:0; bottom:0;
+      background: #0007; display: flex; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .profile-modal {
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 8px 36px #4f8cff26;
+      min-width: 320px;
+      max-width: 97vw;
+      padding: 36px 28px;
+      overflow: hidden;
+      position: relative;
+      border: 2.5px solid #e3eafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: modalIn 0.25s;
+    }
+    @keyframes modalIn {
+      from { transform: scale(0.95); opacity: 0;}
+      to { transform: scale(1); opacity: 1;}
+    }
+    .profile-modal-img {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #4f8cff;
+      background: #fff;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 18px #4f8cff18;
+    }
+    .profile-modal-close {
+      position: absolute; top: 18px; right: 24px;
+      background: none; border: none; font-size: 1.7em; color: #3151a3; cursor: pointer; font-weight: 900;
+      transition: color 0.2s;
+    }
+    .profile-modal-close:hover { color: #ff7675;}
+    .profile-modal h2 {
+      margin: 0 0 10px 0;
+      color: #4f8cff;
+      font-size: 1.7em;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px #4f8cff1a;
+    }
+    .profile-modal-info {
+      color: #232b38;
+      font-size: 1.13em;
+      margin-bottom: 7px;
+      word-break: break-all;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      text-align: center;
+    }
+    .profile-modal-edit {
+      margin-top: 7px;
+      font-size: 1em;
+      color: #3151a3;
+      background: #fff;
+      border: 1.5px solid #4f8cff;
+      border-radius: 9px;
+      padding: 6px 20px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.17s;
+      box-shadow: 0 2px 8px #4f8cff11;
+    }
+    .profile-modal-edit:hover { background: #ffe082;}
+    .edit-modal {
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 8px 36px #4f8cff26;
+      padding: 36px 28px;
+      min-width: 320px;
+      max-width: 98vw;
+      position: relative;
+      animation: modalIn 0.23s;
+    }
+    .edit-modal label {
+      font-weight: 700;
+      color: #3151a3;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .edit-modal input {
+      width: 100%;
+      margin-bottom: 18px;
+      padding: 11px 14px;
+      border-radius: 13px;
+      border: 1.5px solid #d2e6f7;
+      font-size: 1.06rem;
+      background: #f7faff;
+      color: #232b38;
+      transition: border .18s;
+    }
+    .edit-modal input:focus { border: 1.5px solid #4f8cff;}
+    .edit-modal .btn {
+      padding: 12px 28px;
+      border-radius: 22px;
+      font-size: 1.09rem;
+      font-weight: 700;
+      margin-right: 10px;
+    }
+    
+    .zoom-img {
+    transform: scale(1.4); /* 1.5 = 150% zoom */
+  }
+  
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+   <img  style=""   src="   https://pplx-res.cloudinary.com/image/upload/v1748693560/user_uploads/54037463/b1518c5b-166f-43a2-807f-86254680907d/1000087917.jpg?utm_source=perplexity " class="nav-logo-img , zoom-img" alt="HackSeek Logo" />
+    <button style="margin-left: 80px;" class="btn" onclick="window.location='resume.html'">Build Resume</button>
+    <div style="flex:1"></div>
+    <div class="profile-navbar" id="profileNavBtn" title="View Profile">
+      <img src="https://ui-avatars.com/api/?name=Shivam" id="profileNavImg" class="profile-img-navbar" alt="Profile"/>
+      <span class="profile-name-navbar" id="profileNavName">name</span>
+    </div>
+  </nav>
+  <div class="hero">
+    <h1 id="heroTitle">Find Your Dream Hackathon</h1>
+    <p id="heroDesc">
+      1000+ hackathons from top organizers. Filter, search, and apply in one click!
+    </p>
+  </div>
+  <div class="filters">
+    <input id="searchBox" placeholder="Search by title or organizer..." />
+    <select id="filterLocation"><option value="">All Locations</option></select>
+    <select id="filterOrganizer"><option value="">All Organizers</option></select>
+    <select id="filterDuration"><option value="">All Durations</option></select>
+    <select id="sortBy">
+      <option value="">Sort By</option>
+      <option value="prize">Prize (High to Low)</option>
+      <option value="duration">Duration (Long to Short)</option>
+      <option value="deadline">Deadline (Soonest)</option>
+    </select>
+    <button class="btn" id="clearFilters" type="button">Clear</button>
+  </div>
+  <div class="container">
+    <div class="internship-list" id="internshipList"></div>
+  </div>
+  <!-- Profile Modal -->
+  <div class="modal-bg" id="modalBg" style="display:none;">
+    <div class="profile-modal" id="profileModal">
+      <button class="profile-modal-close" onclick="closeModal()">&times;</button>
+      <img src="https://ui-avatars.com/api/?name=Shivam" id="modalProfileImg" class="profile-modal-img" alt="Profile">
+      <h2 id="modalProfileName">make profile</h2>
+      <div class="profile-modal-info" id="modalProfileEmail"></div>
+      <div class="profile-modal-info" id="modalProfileLinkedin"></div>
+      <div class="profile-modal-info" id="modalProfileGithub"></div>
+      <button class="profile-modal-edit" onclick="openEditProfileModal()">Edit</button>
+    </div>
+    <div class="edit-modal" id="editProfileModal" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1000;">
+      <h2>Edit Profile</h2>
+      <form id="profileForm" enctype="multipart/form-data">
+        <label>Name</label>
+        <input name="name" required>
+        <label>Email</label>
+        <input name="email" required>
+        <label>Profile Image</label>
+        <input name="image" type="file" accept="image/*">
+        <label>LinkedIn URL</label>
+        <input name="linkedin">
+        <label>GitHub URL</label>
+        <input name="github">
+        <button class="btn" type="submit">Save</button>
+        <button class="btn" type="button" style="background:#eee;color:#4f8cff;margin-left:8px;" onclick="closeEditProfileModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    // Hackathons DATA (20 hackathons, organizer img)
+    const hackathons = [
+      {id:"1",img:"https://logo.clearbit.com/devfolio.co",title:"CodeZen Hackathon",organizer:"Devfolio",location:"Delhi",prize:"₹1,00,000+",duration:"36 hours",description:"A 36-hour innovation-driven coding marathon. AI, Web, Blockchain tracks.",tags:["Onsite"],deadline:"2025-06-20",applyLink:"https://codezen2025.devfolio.co"},
+      {id:"2",img:"https://logo.clearbit.com/hackerearth.com",title:"Penn Blockchain Conf.",organizer:"HackerEarth",location:"Online & Philadelphia",prize:"$20,000+",duration:"1 week",description:"Build and innovate in blockchain. Virtual hackathon with in-person finale.",tags:["Hybrid"],deadline:"2025-06-18",applyLink:"https://www.hackerearth.com/challenges/hackathon/pbc-hackathon-25/"},
+      {id:"3",img:"https://logo.clearbit.com/unstop.com",title:"Ctrl+Alt+Compete",organizer:"Unstop",location:"Online",prize:"₹50,000+",duration:"48 hours",description:"Solve real-world tech challenges. Open to all students and professionals.",tags:["Online"],deadline:"2025-06-25",applyLink:"https://unstop.com/hackathons"},
+      {id:"4",img:"https://logo.clearbit.com/hackerrank.com",title:"Goldman Sachs India",organizer:"HackerRank",location:"Online",prize:"PPI & Prizes",duration:"12 hours",description:"Solve real-world financial and tech problems. PPI for top performers.",tags:["Online"],deadline:"2025-06-15",applyLink:"https://www.hackerrank.com/goldman-sachs-india-hackathon-2025/"},
+      {id:"5",img:"https://logo.clearbit.com/flipkart.com",title:"Flipkart Grid",organizer:"Flipkart",location:"Online",prize:"₹3,00,000+",duration:"4 weeks",description:"Solve e-commerce tech challenges. PPI opportunities for winners.",tags:["Online"],deadline:"2025-06-28",applyLink:"https://unstop.com/hackathons/flipkart-grid"},
+      {id:"6",img:"https://logo.clearbit.com/mit.edu",title:"MIT Reality Hack",organizer:"MIT Media Lab",location:"Boston, USA",prize:"$10,000+",duration:"5 days",description:"World’s largest AR/VR hackathon. Build immersive tech at MIT.",tags:["Onsite"],deadline:"2025-07-01",applyLink:"https://realityhack.mit.edu/"},
+      {id:"7",img:"https://logo.clearbit.com/devpost.com",title:"Microsoft Imagine Cup",organizer:"Microsoft",location:"Online",prize:"$100,000",duration:"3 months",description:"Global student tech competition. Build solutions for real-world problems.",tags:["Online"],deadline:"2025-07-10",applyLink:"https://imaginecup.microsoft.com/"},
+      {id:"8",img:"https://logo.clearbit.com/devfolio.co",title:"ETHIndia",organizer:"Devfolio",location:"Bangalore",prize:"₹10,00,000+",duration:"36 hours",description:"Asia's biggest Ethereum hackathon. Build dApps, DeFi, NFTs and more.",tags:["Onsite"],deadline:"2025-07-20",applyLink:"https://ethindia.devfolio.co/"},
+      {id:"9",img:"https://logo.clearbit.com/google.com",title:"Google Hash Code",organizer:"Google",location:"Online",prize:"Recognition & Prizes",duration:"48 hours",description:"Team programming competition organized by Google.",tags:["Online"],deadline:"2025-07-31",applyLink:"https://hashcode.withgoogle.com"},
+      {id:"10",img:"https://logo.clearbit.com/hackerearth.com",title:"Smart India Hackathon",organizer:"Govt. of India",location:"Delhi",prize:"₹1,00,000+",duration:"3 days",description:"Solve real-world problems. India's largest hackathon for students.",tags:["Onsite"],deadline:"2025-07-05",applyLink:"https://www.sih.gov.in"},
+      {id:"11",img:"https://logo.clearbit.com/amazon.com",title:"Amazon ML Challenge",organizer:"Amazon",location:"Online",prize:"₹3,00,000+",duration:"2 weeks",description:"Machine learning challenge for students. Solve real-world ML problems.",tags:["Online"],deadline:"2025-07-15",applyLink:"https://www.hackerearth.com/challenges/amazon-ml-challenge/"},
+      {id:"12",img:"https://logo.clearbit.com/nasa.gov",title:"NASA Space Apps",organizer:"NASA",location:"Worldwide",prize:"NASA Swag",duration:"48 hours",description:"Solve space and earth science problems using NASA data.",tags:["Online"],deadline:"2025-07-18",applyLink:"https://www.spaceappschallenge.org/"},
+      {id:"13",img:"https://logo.clearbit.com/devfolio.co",title:"Hack This Fall",organizer:"Devfolio",location:"Gandhinagar",prize:"₹5,00,000+",duration:"36 hours",description:"Community-focused hackathon for all levels. Learn, build, grow.",tags:["Onsite"],deadline:"2025-08-01",applyLink:"https://hackthisfall.devfolio.co/"},
+      {id:"14",img:"https://logo.clearbit.com/devfolio.co",title:"Hack In Out",organizer:"Devfolio",location:"Bangalore",prize:"₹7,00,000+",duration:"36 hours",description:"India's premier invite-only hackathon. Build with top developers.",tags:["Onsite"],deadline:"2025-08-10",applyLink:"https://hackinout.co/"},
+      {id:"15",img:"https://logo.clearbit.com/accenture.com",title:"Accenture Innovation",organizer:"Accenture",location:"Online",prize:"₹2,00,000+",duration:"4 weeks",description:"Solve business and tech challenges for Accenture clients.",tags:["Online"],deadline:"2025-08-15",applyLink:"https://unstop.com/hackathons/accenture-innovation-challenge"},
+      {id:"16",img:"https://logo.clearbit.com/tcs.com",title:"Tata Crucible Hackathon",organizer:"Tata Group",location:"Online",prize:"₹2,50,000+",duration:"2 weeks",description:"Solve business and tech challenges for Tata companies.",tags:["Online"],deadline:"2025-08-20",applyLink:"https://www.hackerearth.com/challenges/tata-crucible-hackathon/"},
+      {id:"17",img:"https://logo.clearbit.com/polygon.technology",title:"Polygon BUIDL IT",organizer:"Polygon",location:"Online",prize:"$100,000+",duration:"3 weeks",description:"Build on Polygon blockchain. Open to global developers.",tags:["Online"],deadline:"2025-08-25",applyLink:"https://buidlit.polygon.technology/"},
+      {id:"18",img:"https://logo.clearbit.com/meta.com",title:"Facebook Dev Circles",organizer:"Meta",location:"Online",prize:"$25,000+",duration:"2 weeks",description:"Build solutions for Facebook/Meta ecosystem. Open to all.",tags:["Online"],deadline:"2025-09-01",applyLink:"https://devpost.com/hackathons"},
+      {id:"19",img:"https://logo.clearbit.com/ethglobal.com",title:"ETHGlobal Online",organizer:"ETHGlobal",location:"Online",prize:"$100,000+",duration:"3 days",description:"Global Ethereum hackathon. Build dApps, DeFi, NFT and more.",tags:["Online"],deadline:"2025-09-10",applyLink:"https://ethglobal.com/"},
+      {id:"20",img:"https://logo.clearbit.com/hcltech.com",title:"HCL TechBee Hackathon",organizer:"HCL",location:"Online",prize:"₹1,00,000+",duration:"1 week",description:"Solve tech challenges and win prizes. Open to students.",tags:["Online"],deadline:"2025-09-20",applyLink:"https://unstop.com/hackathons/hcl-techbee-hackathon"}
+  ,{
+    id: "21",
+    img: "https://logo.clearbit.com/reskilll.com",
+    title: "Agentic Ethereum Hackathon India",
+    organizer: "Reskilll",
+    location: "India (Online/Onsite)",
+    prize: "₹1,50,000+",
+    duration: "3 weeks",
+    description: "Empowering India to lead the Web3 AI evolution with decentralized agents on Ethereum.",
+    tags: ["Hybrid"],
+    deadline: "2025-07-02",
+    applyLink: "https://reskilll.com/allhacks",
+    linkedin: "https://www.linkedin.com/company/reskilll/"
+  },
+  {
+    id: "22",
+    img: "https://logo.clearbit.com/reskilll.com",
+    title: "Code Cubicle - 4",
+    organizer: "Reskilll",
+    location: "India (Onsite)",
+    prize: "₹75,000+",
+    duration: "2 days",
+    description: "Premier hackathon series for developers, designers, and tech enthusiasts to code, build, and innovate.",
+    tags: ["Onsite"],
+    deadline: "2025-07-25",
+    applyLink: "https://reskilll.com/allhacks",
+    linkedin: "https://www.linkedin.com/company/reskilll/"
+  },
+  {
+    id: "23",
+    img: "https://logo.clearbit.com/theelites.in",
+    title: "Hackamania 2025",
+    organizer: "The Elites",
+    location: "India (Onsite)",
+    prize: "₹50,000+",
+    duration: "8 hours",
+    description: "Student-led hackathon that celebrates innovation, technology, and real-world problem solving.",
+    tags: ["Onsite"],
+    deadline: "2025-06-10",
+    applyLink: "https://reskilll.com/allhacks",
+    linkedin: "https://www.linkedin.com/company/theelitesin/"
+  },
+  {
+    id: "24",
+    img: "https://logo.clearbit.com/mlh.io",
+    title: "nwHacks 2025",
+    organizer: "MLH",
+    location: "Vancouver, Canada",
+    prize: "CA$10,000+",
+    duration: "24 hours",
+    description: "Canada’s largest student-run hackathon. Build, learn, and network with peers.",
+    tags: ["Onsite"],
+    deadline: "2025-01-19",
+    applyLink: "https://nwhacks.io/",
+    linkedin: "https://www.linkedin.com/company/major-league-hacking/"
+  },
+  {
+    id: "25",
+    img: "https://logo.clearbit.com/mlh.io",
+    title: "Hoya Hacks",
+    organizer: "MLH",
+    location: "Washington, DC, USA",
+    prize: "$5,000+",
+    duration: "3 days",
+    description: "Georgetown University’s flagship hackathon for students.",
+    tags: ["Onsite"],
+    deadline: "2025-01-26",
+    applyLink: "https://hoyahacks.org/",
+    linkedin: "https://www.linkedin.com/company/major-league-hacking/"
+  },
+  {
+    id: "26",
+    img: "https://logo.clearbit.com/mit.edu",
+    title: "MIT Reality Hack",
+    organizer: "MIT Media Lab",
+    location: "Boston, USA",
+    prize: "$10,000+",
+    duration: "5 days",
+    description: "World’s largest AR/VR hackathon. Collaborate, build, and showcase immersive tech at MIT.",
+    tags: ["Onsite"],
+    deadline: "2025-01-10",
+    applyLink: "https://realityhack.mit.edu/",
+    linkedin: "https://www.linkedin.com/company/mit-media-lab/"
+  },
+  {
+    id: "27",
+    img: "https://logo.clearbit.com/bit.camp",
+    title: "Bitcamp 2025",
+    organizer: "Bitcamp",
+    location: "USA",
+    prize: "$8,000+",
+    duration: "3 days",
+    description: "One of the largest US hackathons for students to collaborate on tech projects.",
+    tags: ["Onsite"],
+    deadline: "2025-04-15",
+    applyLink: "https://bit.camp/",
+    linkedin: "https://www.linkedin.com/company/bitcamp/"
+  },
+  {
+    id: "28",
+    img: "https://logo.clearbit.com/wehacktx.com",
+    title: "WEHack 2025",
+    organizer: "WEHack",
+    location: "Richardson, Texas, USA",
+    prize: "$10,000+",
+    duration: "2 days",
+    description: "Dallas’ largest inclusive hackathon, encouraging women and underrepresented groups in tech.",
+    tags: ["Onsite"],
+    deadline: "2025-04-13",
+    applyLink: "https://wehacktx.com/",
+    linkedin: "https://www.linkedin.com/company/wehacktx/"
+  },
+  {
+    id: "29",
+    img: "https://logo.clearbit.com/hackzurich.com",
+    title: "HackZurich 2025",
+    organizer: "HackZurich",
+    location: "Zurich, Switzerland",
+    prize: "CHF 10,000+",
+    duration: "3 days",
+    description: "Europe’s largest hackathon, bringing together global talent for a weekend of innovation.",
+    tags: ["Onsite"],
+    deadline: "2025-09-15",
+    applyLink: "https://www.hackzurich.com/",
+    linkedin: "https://www.linkedin.com/company/hackzurich/"
+  },
+  {
+    id: "30",
+    img: "https://logo.clearbit.com/hackthenorth.com",
+    title: "Hack the North",
+    organizer: "Hack the North",
+    location: "Waterloo, Canada",
+    prize: "CA$61,928+",
+    duration: "36 hours",
+    description: "Canada’s biggest hackathon at University of Waterloo. 1000+ students, $61,928+ in prizes.",
+    tags: ["Onsite"],
+    deadline: "2025-09-20",
+    applyLink: "https://hackthenorth.com/",
+    linkedin: "https://www.linkedin.com/company/hack-the-north/"
+  },
+  {
+    id: "31",
+    img: "https://logo.clearbit.com/cornell.edu",
+    title: "Cornell Digital Ag Hackathon",
+    organizer: "Cornell University",
+    location: "Ithaca, NY, USA",
+    prize: "$8,000+",
+    duration: "36 hours",
+    description: "Solve agricultural challenges with technology. Workshops, networking, and cash prizes.",
+    tags: ["Onsite"],
+    deadline: "2025-03-01",
+    applyLink: "https://www.digitalagriculture.cornell.edu/hackathon/",
+    linkedin: "https://www.linkedin.com/school/cornell-university/"
+  },
+  {
+    id: "32",
+    img: "https://logo.clearbit.com/rose-hulman.edu",
+    title: "Rose Hack 2025",
+    organizer: "Rose-Hulman Institute",
+    location: "Riverside, CA, USA",
+    prize: "$3,000+",
+    duration: "24 hours",
+    description: "24-hour hackathon for undergraduates. Open to all, with mentorship and prizes.",
+    tags: ["Onsite"],
+    deadline: "2025-02-09",
+    applyLink: "https://rosehack.com/",
+    linkedin: "https://www.linkedin.com/school/rose-hulman-institute-of-technology/"
+  },
+  {
+    id: "21",
+    img: "https://logo.clearbit.com/mit.edu",
+    title: "HackMIT 2025",
+    organizer: "MIT",
+    location: "Cambridge, MA, USA",
+    prize: "$15,000+",
+    duration: "36 hours",
+    description: "MIT's flagship hackathon, bringing together global students to build impactful tech projects.",
+    tags: ["Onsite"],
+    deadline: "2025-09-21",
+    applyLink: "https://hackmit.org/",
+    linkedin: "https://www.linkedin.com/school/mit/"
+  },
+  {
+    id: "22",
+    img: "https://logo.clearbit.com/hackzurich.com",
+    title: "HackZurich 2025",
+    organizer: "HackZurich",
+    location: "Zurich, Switzerland",
+    prize: "CHF 10,000+",
+    duration: "40 hours",
+    description: "Europe’s largest hackathon. 600+ hackers, 85+ countries, 40 hours of innovation and fun.",
+    tags: ["Onsite"],
+    deadline: "2025-09-15",
+    applyLink: "https://www.hackzurich.com/",
+    linkedin: "https://www.linkedin.com/company/hackzurich/"
+  },
+  {
+    id: "23",
+    img: "https://logo.clearbit.com/angelhack.com",
+    title: "AngelHack Global Hackathon",
+    organizer: "AngelHack",
+    location: "Global",
+    prize: "$50,000+",
+    duration: "48 hours",
+    description: "World's largest global hackathon series for developers, startups, and entrepreneurs.",
+    tags: ["Hybrid"],
+    deadline: "2025-08-01",
+    applyLink: "https://angelhack.com/hackathons/",
+    linkedin: "https://www.linkedin.com/company/angelhack/"
+  },
+  {
+    id: "24",
+    img: "https://logo.clearbit.com/mlh.io",
+    title: "MLH Global Hack Week",
+    organizer: "Major League Hacking",
+    location: "Online",
+    prize: "Swag & Prizes",
+    duration: "1 week",
+    description: "A week-long global hackathon festival with workshops, challenges, and prizes. Open to all.",
+    tags: ["Online"],
+    deadline: "2025-07-07",
+    applyLink: "https://ghw.mlh.io/",
+    linkedin: "https://www.linkedin.com/company/major-league-hacking/"
+  },
+  {
+    id: "25",
+    img: "https://logo.clearbit.com/ethglobal.com",
+    title: "ETHGlobal New Delhi 2025",
+    organizer: "ETHGlobal",
+    location: "New Delhi, India",
+    prize: "$100,000+",
+    duration: "3 days",
+    description: "Asia's top Web3 hackathon with global mentors, workshops, and massive prizes.",
+    tags: ["Onsite"],
+    deadline: "2025-09-26",
+    applyLink: "https://ethglobal.com/events/newdelhi",
+    linkedin: "https://www.linkedin.com/company/ethglobal/"
+  },
+  {
+    id: "26",
+    img: "https://logo.clearbit.com/concordia.ca",
+    title: "ConUHacks X",
+    organizer: "Concordia University",
+    location: "Montreal, Canada",
+    prize: "$10,000+",
+    duration: "24 hours",
+    description: "Canada's top student hackathon, organized by HackConcordia. Open to all students.",
+    tags: ["Onsite"],
+    deadline: "2025-02-02",
+    applyLink: "https://conuhacks.io/",
+    linkedin: "https://www.linkedin.com/school/concordia-university/"
+  },
+  {
+    id: "27",
+    img: "https://logo.clearbit.com/cornell.edu",
+    title: "Cornell Digital Ag Hackathon",
+    organizer: "Cornell University",
+    location: "Ithaca, NY, USA",
+    prize: "$8,000+",
+    duration: "36 hours",
+    description: "Solve agricultural challenges with tech. Workshops, networking, and cash prizes.",
+    tags: ["Onsite"],
+    deadline: "2025-03-01",
+    applyLink: "https://www.digitalagriculture.cornell.edu/hackathon/",
+    linkedin: "https://www.linkedin.com/school/cornell-university/"
+  },
+  {
+    id: "28",
+    img: "https://logo.clearbit.com/rose-hulman.edu",
+    title: "Rose Hack 2025",
+    organizer: "Rose-Hulman Institute",
+    location: "Riverside, CA, USA",
+    prize: "$3,000+",
+    duration: "24 hours",
+    description: "24-hour hackathon for undergraduates. Open to all, with mentorship and prizes.",
+    tags: ["Onsite"],
+    deadline: "2025-02-09",
+    applyLink: "https://rosehack.com/",
+    linkedin: "https://www.linkedin.com/school/rose-hulman-institute-of-technology/"
+  },
+  {
+    id: "29",
+    img: "https://logo.clearbit.com/bit.camp",
+    title: "Bitcamp 2025",
+    organizer: "Bitcamp",
+    location: "College Park, MD, USA",
+    prize: "$8,000+",
+    duration: "3 days",
+    description: "One of the largest US hackathons for students to collaborate on tech projects.",
+    tags: ["Onsite"],
+    deadline: "2025-04-13",
+    applyLink: "https://bit.camp/",
+    linkedin: "https://www.linkedin.com/company/bitcamp/"
+  },
+  {
+    id: "30",
+    img: "https://logo.clearbit.com/wehacktx.com",
+    title: "WEHack 2025",
+    organizer: "WEHack",
+    location: "Richardson, Texas, USA",
+    prize: "$10,000+",
+    duration: "2 days",
+    description: "Dallas’ largest inclusive hackathon, encouraging women and underrepresented groups in tech.",
+    tags: ["Onsite"],
+    deadline: "2025-04-13",
+    applyLink: "https://wehacktx.com/",
+    linkedin: "https://www.linkedin.com/company/wehacktx/"
+  },
+  {
+    id: "31",
+    img: "https://logo.clearbit.com/ust.com",
+    title: "UST D3code Hackathon",
+    organizer: "UST",
+    location: "India (Hybrid)",
+    prize: "₹10,00,000+",
+    duration: "2 weeks",
+    description: "Premier hybrid hackathon for innovation, collaboration and problem solving in tech.",
+    tags: ["Hybrid"],
+    deadline: "2025-10-01",
+    applyLink: "https://d3code.ust.com/",
+    linkedin: "https://www.linkedin.com/company/ust-global/"
+  },
+  {
+    id: "32",
+    img: "https://logo.clearbit.com/api.world",
+    title: "API World & CloudX Hackathon",
+    organizer: "API World",
+    location: "Santa Clara, USA / Online",
+    prize: "$12,500+",
+    duration: "2 weeks",
+    description: "Global API and cloud hackathon with virtual and in-person sessions, workshops, and prizes.",
+    tags: ["Hybrid"],
+    deadline: "2025-09-05",
+    applyLink: "https://apiworld.co/hackathon/",
+    linkedin: "https://www.linkedin.com/company/api-world/"
+  },
+  {
+    id: "33",
+    img: "https://logo.clearbit.com/hackclub.com",
+    title: "Hack Club Summer of Making",
+    organizer: "Hack Club",
+    location: "Global (Online)",
+    prize: "Swag & Kits",
+    duration: "All Summer",
+    description: "A global summer-long hackathon for high schoolers to build, learn, and share tech projects.",
+    tags: ["Online"],
+    deadline: "2025-08-15",
+    applyLink: "https://hackclub.com/som/",
+    linkedin: "https://www.linkedin.com/company/hack-club/"
+  },
+
+  {
+    id: "34",
+    img: "https://logo.clearbit.com/mit.edu",
+    title: "HackMIT 2025",
+    organizer: "MIT",
+    location: "Cambridge, MA, USA",
+    prize: "$15,000+",
+    duration: "36 hours",
+    description: "MIT's flagship hackathon with global students building impactful tech projects.",
+    tags: ["Onsite"],
+    deadline: "2025-09-21",
+    applyLink: "https://hackmit.org/",
+    linkedin: "https://www.linkedin.com/school/mit/"
+  },
+  {
+    id: "35",
+    img: "https://logo.clearbit.com/mlh.io",
+    title: "MLH Global Hack Week",
+    organizer: "Major League Hacking",
+    location: "Online",
+    prize: "Swag & Prizes",
+    duration: "1 week",
+    description: "A week-long global hackathon festival with workshops, challenges, and prizes. Open to all.",
+    tags: ["Online"],
+    deadline: "2025-07-07",
+    applyLink: "https://ghw.mlh.io/",
+    linkedin: "https://www.linkedin.com/company/major-league-hacking/"
+  },
+  {
+    id: "36",
+    img: "https://logo.clearbit.com/hackzurich.com",
+    title: "HackZurich 2025",
+    organizer: "HackZurich",
+    location: "Zurich, Switzerland",
+    prize: "CHF 10,000+",
+    duration: "40 hours",
+    description: "Europe’s largest hackathon. 600+ hackers, 85+ countries, 40 hours of innovation.",
+    tags: ["Onsite"],
+    deadline: "2025-09-15",
+    applyLink: "https://www.hackzurich.com/",
+    linkedin: "https://www.linkedin.com/company/hackzurich/"
+  },
+  {
+    id: "37",
+    img: "https://logo.clearbit.com/angelhack.com",
+    title: "AngelHack Global Hackathon",
+    organizer: "AngelHack",
+    location: "Global",
+    prize: "$50,000+",
+    duration: "48 hours",
+    description: "World's largest global hackathon series for developers, startups, and entrepreneurs.",
+    tags: ["Hybrid"],
+    deadline: "2025-08-01",
+    applyLink: "https://angelhack.com/hackathons/",
+    linkedin: "https://www.linkedin.com/company/angelhack/"
+  },
+  {
+    id: "38",
+    img: "https://logo.clearbit.com/ethglobal.com",
+    title: "ETHGlobal New Delhi 2025",
+    organizer: "ETHGlobal",
+    location: "New Delhi, India",
+    prize: "$100,000+",
+    duration: "3 days",
+    description: "Asia's top Web3 hackathon with global mentors, workshops, and massive prizes.",
+    tags: ["Onsite"],
+    deadline: "2025-09-26",
+    applyLink: "https://ethglobal.com/events/newdelhi",
+    linkedin: "https://www.linkedin.com/company/ethglobal/"
+  },
+  {
+    id: "39",
+    img: "https://logo.clearbit.com/concordia.ca",
+    title: "ConUHacks X",
+    organizer: "Concordia University",
+    location: "Montreal, Canada",
+    prize: "$10,000+",
+    duration: "24 hours",
+    description: "Canada's top student hackathon, organized by HackConcordia. Open to all students.",
+    tags: ["Onsite"],
+    deadline: "2025-02-02",
+    applyLink: "https://conuhacks.io/",
+    linkedin: "https://www.linkedin.com/school/concordia-university/"
+  },
+  {
+    id: "40",
+    img: "https://logo.clearbit.com/rose-hulman.edu",
+    title: "Rose Hack 2025",
+    organizer: "Rose-Hulman Institute",
+    location: "Riverside, CA, USA",
+    prize: "$3,000+",
+    duration: "24 hours",
+    description: "24-hour hackathon for undergraduates. Open to all, with mentorship and prizes.",
+    tags: ["Onsite"],
+    deadline: "2025-02-09",
+    applyLink: "https://rosehack.com/",
+    linkedin: "https://www.linkedin.com/school/rose-hulman-institute-of-technology/"
+  },
+  {
+    id: "41",
+    img: "https://logo.clearbit.com/bit.camp",
+    title: "Bitcamp 2025",
+    organizer: "Bitcamp",
+    location: "College Park, MD, USA",
+    prize: "$8,000+",
+    duration: "3 days",
+    description: "One of the largest US hackathons for students to collaborate on tech projects.",
+    tags: ["Onsite"],
+    deadline: "2025-04-13",
+    applyLink: "https://bit.camp/",
+    linkedin: "https://www.linkedin.com/company/bitcamp/"
+  },
+  {
+    id: "42",
+    img: "https://logo.clearbit.com/wehacktx.com",
+    title: "WEHack 2025",
+    organizer: "WEHack",
+    location: "Richardson, Texas, USA",
+    prize: "$10,000+",
+    duration: "2 days",
+    description: "Dallas’ largest inclusive hackathon, encouraging women and underrepresented groups in tech.",
+    tags: ["Onsite"],
+    deadline: "2025-04-13",
+    applyLink: "https://wehacktx.com/",
+    linkedin: "https://www.linkedin.com/company/wehacktx/"
+  },
+  {
+    id: "43",
+    img: "https://logo.clearbit.com/api.world",
+    title: "API World & CloudX Hackathon",
+    organizer: "API World",
+    location: "Santa Clara, USA / Online",
+    prize: "$12,500+",
+    duration: "2 weeks",
+    description: "Global API and cloud hackathon with virtual and in-person sessions, workshops, and prizes.",
+    tags: ["Hybrid"],
+    deadline: "2025-09-05",
+    applyLink: "https://apiworld.co/hackathon/",
+    linkedin: "https://www.linkedin.com/company/api-world/"
+  },
+  {
+    id: "44",
+    img: "https://logo.clearbit.com/hackclub.com",
+    title: "Hack Club Summer of Making",
+    organizer: "Hack Club",
+    location: "Global (Online)",
+    prize: "Swag & Kits",
+    duration: "All Summer",
+    description: "A global summer-long hackathon for high schoolers to build, learn, and share tech projects.",
+    tags: ["Online"],
+    deadline: "2025-08-15",
+    applyLink: "https://hackclub.com/som/",
+    linkedin: "https://www.linkedin.com/company/hack-club/"
+  },
+  {
+    id: "45",
+    img: "https://logo.clearbit.com/reskilll.com",
+    title: "HackForce Challenge 2025",
+    organizer: "Reskilll",
+    location: "India (Hybrid)",
+    prize: "₹1,50,000+",
+    duration: "2 days",
+    description: "A two-day coding event focused on solving real-world challenges using AI and web development.",
+    tags: ["Hybrid"],
+    deadline: "2025-06-10",
+    applyLink: "https://reskilll.com/allhacks",
+    linkedin: "https://www.linkedin.com/company/reskilll/"
+  },
+  {
+    id: "46",
+    img: "https://logo.clearbit.com/devfolio.co",
+    title: "Hack With Gujarat",
+    organizer: "Devfolio",
+    location: "Online",
+    prize: "Exciting Prizes & Swag",
+    duration: "72 hours",
+    description: "Gujarat's biggest student-run hackathon. 72-hour virtual coding showdown with open innovation.",
+    tags: ["Online"],
+    deadline: "2025-05-29",
+    applyLink: "https://hack-with-gujarat.devfolio.co",
+    linkedin: "https://www.linkedin.com/company/devfolio/"
+  }
+];
+
+
+    // 
+// Profile logic
+    let profile = JSON.parse(localStorage.getItem('hackseek_profile')) || {
+      name: 'Shivam', email: '', img: '', linkedin: '', github: ''
+    };
+    function updateProfileNavbar() {
+      document.getElementById('profileNavImg').src = profile.img || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.name || 'User');
+      document.getElementById('profileNavName').textContent = profile.name || 'Profile';
+    }
+    document.getElementById('profileNavBtn').onclick = function() {
+      document.getElementById('modalBg').style.display = 'flex';
+      document.getElementById('profileModal').style.display = 'flex';
+      document.getElementById('editProfileModal').style.display = 'none';
+      document.getElementById('modalProfileImg').src = profile.img || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.name || 'User');
+      document.getElementById('modalProfileName').textContent = profile.name || 'Your Name';
+      document.getElementById('modalProfileEmail').textContent = profile.email || '';
+      document.getElementById('modalProfileLinkedin').innerHTML = profile.linkedin ? `<a href="${profile.linkedin}" target="_blank">LinkedIn</a>` : '';
+      document.getElementById('modalProfileGithub').innerHTML = profile.github ? `<a href="${profile.github}" target="_blank">GitHub</a>` : '';
+    };
+    function closeModal() {
+      document.getElementById('modalBg').style.display = 'none';
+    }
+    function openEditProfileModal() {
+      let f = document.getElementById('profileForm');
+      f.name.value = profile.name || '';
+      f.email.value = profile.email || '';
+      f.image.value = '';
+      f.linkedin.value = profile.linkedin || '';
+      f.github.value = profile.github || '';
+      document.getElementById('editProfileModal').style.display = 'block';
+    }
+    function closeEditProfileModal() {
+      document.getElementById('editProfileModal').style.display = 'none';
+    }
+    document.getElementById('profileForm').onsubmit = function(e) {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(this).entries());
+      profile.name = data.name;
+      profile.email = data.email;
+      profile.linkedin = data.linkedin;
+      profile.github = data.github;
+      const file = this.image.files[0];
+      if(file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          profile.img = evt.target.result;
+          saveProfile();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        saveProfile();
+      }
+      function saveProfile() {
+        localStorage.setItem('hackseek_profile', JSON.stringify(profile));
+        updateProfileNavbar();
+        document.getElementById('modalProfileImg').src = profile.img || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.name || 'User');
+        document.getElementById('modalProfileName').textContent = profile.name || 'Your Name';
+        document.getElementById('modalProfileEmail').textContent = profile.email || '';
+        document.getElementById('modalProfileLinkedin').innerHTML = profile.linkedin ? `<a href="${profile.linkedin}" target="_blank">LinkedIn</a>` : '';
+        document.getElementById('modalProfileGithub').innerHTML = profile.github ? `<a href="${profile.github}" target="_blank">GitHub</a>` : '';
+        closeEditProfileModal();
+      }
+    };
+    updateProfileNavbar();
+
+    // Filters setup
+    function setFilterOptions() {
+      const locSet = new Set(), orgSet = new Set(), durSet = new Set();
+      hackathons.forEach(h => {
+        locSet.add(h.location);
+        orgSet.add(h.organizer);
+        durSet.add(h.duration);
+      });
+      const locSel = document.getElementById('filterLocation');
+      const orgSel = document.getElementById('filterOrganizer');
+      const durSel = document.getElementById('filterDuration');
+      locSet.forEach(l => locSel.innerHTML += `<option value="${l}">${l}</option>`);
+      orgSet.forEach(o => orgSel.innerHTML += `<option value="${o}">${o}</option>`);
+      durSet.forEach(d => durSel.innerHTML += `<option value="${d}">${d}</option>`);
+    }
+    setFilterOptions();
+
+    // Bookmark logic
+    let bookmarks = JSON.parse(localStorage.getItem('hackseek_bookmarks') || '[]');
+
+    function renderHackathons(list) {
+      const container = document.getElementById('internshipList');
+      if (!list.length) {
+        container.innerHTML = '<div style="padding:2em;text-align:center;color:#888;">No hackathons found.</div>';
+        return;
+      }
+      container.innerHTML = list.map(hack => `
+        <div class="card">
+          <div class="card-header">
+            <img src="${hack.img}" class="org-img" alt="${hack.organizer}">
+            <div>
+              <h3>${hack.title}</h3>
+              <div class="company">${hack.organizer} &middot; ${hack.location}</div>
+            </div>
+          </div>
+          <div class="desc">${hack.description}</div>
+          <div class="badges">
+            ${hack.tags.map(tag => `<span class="badge">${tag}</span>`).join('')}
+            <span class="badge">${hack.duration}</span>
+            <span class="badge">${hack.prize}</span>
+            <span class="badge badge-deadline">Apply by ${hack.deadline}</span>
+          </div>
+          <div class="actions">
+            <button class="bookmark-btn ${bookmarks.includes(hack.id) ? 'bookmarked' : ''}" data-id="${hack.id}">
+              ${bookmarks.includes(hack.id) ? 'Bookmarked' : 'Bookmark'}
+            </button>
+            <a href="${hack.applyLink}" target="_blank" class="btn">Apply</a>
+            <a href="https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(hack.organizer)}" target="_blank" class="linkedin">LinkedIn</a>
+          </div>
+        </div>
+      `).join('');
+      document.querySelectorAll('.bookmark-btn').forEach(btn => {
+        btn.onclick = function() {
+          const id = this.getAttribute('data-id');
+          if (bookmarks.includes(id)) {
+            bookmarks = bookmarks.filter(b => b !== id);
+          } else {
+            bookmarks.push(id);
+          }
+          localStorage.setItem('hackseek_bookmarks', JSON.stringify(bookmarks));
+          renderHackathons(list); // update button state
+        };
+      });
+    }
+
+    // Filter logic
+    function filterAndRender() {
+      let list = hackathons.slice();
+      const search = document.getElementById('searchBox').value.toLowerCase();
+      const location = document.getElementById('filterLocation').value;
+      const organizer = document.getElementById('filterOrganizer').value;
+      const duration = document.getElementById('filterDuration').value;
+      const sortBy = document.getElementById('sortBy').value;
+
+      if (search) {
+        list = list.filter(i =>
+          i.title.toLowerCase().includes(search) ||
+          i.organizer.toLowerCase().includes(search)
+        );
+      }
+      if (location) list = list.filter(i => i.location === location);
+      if (organizer) list = list.filter(i => i.organizer === organizer);
+      if (duration) list = list.filter(i => i.duration === duration);
+
+      if (sortBy === "prize") {
+        list.sort((a, b) => (parseInt(b.prize.replace(/\D/g, "")) || 0) - (parseInt(a.prize.replace(/\D/g, "")) || 0));
+      } else if (sortBy === "duration") {
+        list.sort((a, b) => (parseInt(b.duration) || 0) - (parseInt(a.duration) || 0));
+      } else if (sortBy === "deadline") {
+        list.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+      }
+      renderHackathons(list);
+    }
+    // Event listeners
+    document.getElementById('searchBox').addEventListener('input', filterAndRender);
+    document.getElementById('filterLocation').addEventListener('change', filterAndRender);
+    document.getElementById('filterOrganizer').addEventListener('change', filterAndRender);
+    document.getElementById('filterDuration').addEventListener('change', filterAndRender);
+    document.getElementById('sortBy').addEventListener('change', filterAndRender);
+    document.getElementById('clearFilters').addEventListener('click', () => {
+      document.getElementById('searchBox').value = '';
+      document.getElementById('filterLocation').value = '';
+      document.getElementById('filterOrganizer').value = '';
+      document.getElementById('filterDuration').value = '';
+      document.getElementById('sortBy').value = '';
+      filterAndRender();
+    });
+
+    // Initial render
+    filterAndRender();
+  </script>
+</body>
+</html>
